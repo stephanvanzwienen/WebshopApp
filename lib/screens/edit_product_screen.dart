@@ -82,20 +82,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
       _form.currentState.save();
       //check if we edit existing product or adding new one
       if (_editedProduct.id != null) {
-        Provider.of<Products>(context, listen: false)
+        await Provider.of<Products>(context, listen: false)
             .updateProduct(_editedProduct.id, _editedProduct);
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
       } else {
         //Set listen to false, we dont care about changes here.
         //We only want to dispatch some data.
         try {
-         await Provider.of<Products>(context, listen: false)
+          await Provider.of<Products>(context, listen: false)
               .addProduct(_editedProduct);
         } catch (error) {
-          //must await showdialog cause it returns a future and we want 
+          //must await showdialog cause it returns a future and we want
           //to wait for the user to dispose the alert box
           await showDialog<void>(
             context: context,
@@ -111,13 +107,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
               ],
             ),
           );
-        } finally {
-          setState(() {
-            _isLoading = false;
-          });
-          Navigator.of(context).pop();
-        }
+        } 
+        // finally {
+        //   setState(() {
+        //     _isLoading = false;
+        //   });
+        //   Navigator.of(context).pop();
+        // }
       }
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
     }
   }
 
