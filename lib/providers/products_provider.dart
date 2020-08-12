@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop_app/models/http_exception.dart';
 
 import './product.dart';
+import '../models/http_exception.dart';
 
 class Products with ChangeNotifier {
   List<Product> _items = [
@@ -141,23 +143,21 @@ class Products with ChangeNotifier {
   }
 
   //we use optimistic updating (rollback if deletion fails)
-  void deleteProduct(String id) {
-    final url = 'https://shop-app-19479.firebaseio.com/products/$id';
-    final existingProductIndex = _items.indexWhere((prod)=>prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = 'https://shop-app-19479.firebaseio.com/products/$id.json';
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     //keep reference to product that we want to delete
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
     notifyListeners();
+
     //if deleting fails, reinsert the product from reference.
-    http.delete(url).then((response){
-      if(response.statusCode >= 400){
-        
-      }
-      existingProduct = null;
-    }).catchError((_){
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
-    });
-    
+      throw HttpException('Could not delete product');
+    }
+    existingProduct = null;
   }
 }
