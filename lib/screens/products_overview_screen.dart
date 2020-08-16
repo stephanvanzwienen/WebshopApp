@@ -60,7 +60,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MyShop'),
+        title: Text('Printer Shop'),
         actions: <Widget>[
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
