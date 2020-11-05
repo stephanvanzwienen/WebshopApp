@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         //put in consumer so when loging status changes we can switch home screen
         child: Consumer<Auth>(
           builder: (ctx, auth, _) => MaterialApp(
-              title: 'Printer Stuff',
+              title: '3D Printer Shop',
               debugShowCheckedModeBanner: false,
               theme: ThemeData(
                   primarySwatch: Colors.purple,

@@ -1,0 +1,334 @@
+@startuml
+set namespaceSeparator ::
+
+class "shop_app::helpers::custom_route.dart::CustomRoute<T>" {
+  +Widget buildTransitions()
+}
+
+"flutter::src::material::page.dart::MaterialPageRoute<T>" <|-- "shop_app::helpers::custom_route.dart::CustomRoute<T>"
+
+class "shop_app::helpers::custom_route.dart::CustomPageTransistionBuilder" {
+  +Widget buildTransitions()
+}
+
+"flutter::src::material::page_transitions_theme.dart::PageTransitionsBuilder" <|-- "shop_app::helpers::custom_route.dart::CustomPageTransistionBuilder"
+
+class "shop_app::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::main.dart::MyApp"
+
+class "shop_app::models::http_exception.dart::HttpException" {
+  +String message
+  +String toString()
+}
+
+"dart::core::Exception" <|-- "shop_app::models::http_exception.dart::HttpException"
+
+class "shop_app::providers::auth.dart::Auth" {
+  -dynamic _token
+  -DateTime _expiryDate
+  -dynamic _userId
+  -Timer _authTimer
+  +bool isAuth
+  +dynamic token
+  +dynamic userId
+  -Future _authenticate()
+  +Future signup()
+  +Future signin()
+  +Future tryAutoLogin()
+  +Future logout()
+  -void _autoLogout()
+}
+
+"shop_app::providers::auth.dart::Auth" o-- "dart::async::Timer"
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::auth.dart::Auth"
+
+class "shop_app::providers::cart.dart::CartItem" {
+  +String id
+  +String title
+  +int quantity
+  +double price
+}
+
+class "shop_app::providers::cart.dart::Cart" {
+  -Map<String, CartItem> _items
+  +Map<String, CartItem> items
+  +int itemCount
+  +double totalAmount
+  +void addItem()
+  +void removeItem()
+  +void removeSingleItem()
+  +void clear()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::cart.dart::Cart"
+
+class "shop_app::providers::orders.dart::OrderItem" {
+  +dynamic id
+  +double amount
+  +List<CartItem> products
+  +DateTime dateTime
+}
+
+class "shop_app::providers::orders.dart::Orders" {
+  -List<OrderItem> _orders
+  +dynamic authToken
+  +dynamic userId
+  +List<OrderItem> orders
+  +Future fetchAndSetOrders()
+  +Future addOrder()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::orders.dart::Orders"
+
+class "shop_app::providers::product.dart::Product" {
+  +String id
+  +String title
+  +String description
+  +double price
+  +String imageUrl
+  +bool isFavorite
+  +Future toggleFavoriteStatus()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::product.dart::Product"
+
+class "shop_app::providers::products_provider.dart::Products" {
+  -List<Product> _items
+  +dynamic authToken
+  +dynamic userId
+  +List<Product> items
+  +List<Product> favoriteItems
+  +Product findById()
+  +Future fetchAndSetProducts()
+  +Future addProduct()
+  +Future updateProduct()
+  +Future deleteProduct()
+}
+
+"flutter::src::foundation::change_notifier.dart::ChangeNotifier" <|-- "shop_app::providers::products_provider.dart::Products"
+
+class "shop_app::screens::auth_screen.dart::AuthMode" {
+  +int index
+  {static} +List<AuthMode> values
+  {static} +AuthMode Signup
+  {static} +AuthMode Login
+}
+
+"shop_app::screens::auth_screen.dart::AuthMode" o-- "shop_app::screens::auth_screen.dart::AuthMode"
+
+class "shop_app::screens::auth_screen.dart::AuthScreen" {
+  {static} +String routeName
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::auth_screen.dart::AuthScreen"
+
+class "shop_app::screens::auth_screen.dart::AuthCard" {
+  +_AuthCardState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "shop_app::screens::auth_screen.dart::AuthCard"
+
+class "shop_app::screens::auth_screen.dart::_AuthCardState" {
+  -GlobalKey<FormState> _formKey
+  -AuthMode _authMode
+  -Map _authData
+  -bool _isLoading
+  -TextEditingController _passwordController
+  -AnimationController _controller
+  -Animation<Offset> _slideAnimation
+  -Animation<double> _opacityAnimation
+  +void initState()
+  +void dispose()
+  -void _showErrorDialog()
+  -Future _submit()
+  -void _switchAuthMode()
+  +Widget build()
+}
+
+"shop_app::screens::auth_screen.dart::_AuthCardState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"shop_app::screens::auth_screen.dart::_AuthCardState" o-- "shop_app::screens::auth_screen.dart::AuthMode"
+"shop_app::screens::auth_screen.dart::_AuthCardState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"shop_app::screens::auth_screen.dart::_AuthCardState" o-- "flutter::src::animation::animation_controller.dart::AnimationController"
+"shop_app::screens::auth_screen.dart::_AuthCardState" o-- "flutter::src::animation::animation.dart::Animation<Offset>"
+"shop_app::screens::auth_screen.dart::_AuthCardState" o-- "flutter::src::animation::animation.dart::Animation<double>"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "shop_app::screens::auth_screen.dart::_AuthCardState"
+"flutter::src::widgets::ticker_provider.dart::SingleTickerProviderStateMixin<T>" <|-- "shop_app::screens::auth_screen.dart::_AuthCardState"
+
+class "shop_app::screens::cart_screen.dart::CartScreen" {
+  {static} +String routeName
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::cart_screen.dart::CartScreen"
+
+class "shop_app::screens::cart_screen.dart::OrderButton" {
+  +Cart cartData
+  +_OrderButtonState createState()
+}
+
+"shop_app::screens::cart_screen.dart::OrderButton" o-- "shop_app::providers::cart.dart::Cart"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "shop_app::screens::cart_screen.dart::OrderButton"
+
+class "shop_app::screens::cart_screen.dart::_OrderButtonState" {
+  -bool _isLoading
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "shop_app::screens::cart_screen.dart::_OrderButtonState"
+
+class "shop_app::screens::edit_product_screen.dart::EditProductScreen" {
+  {static} +String routeName
+  +_EditProductScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "shop_app::screens::edit_product_screen.dart::EditProductScreen"
+
+class "shop_app::screens::edit_product_screen.dart::_EditProductScreenState" {
+  -FocusNode _priceFocusNode
+  -FocusNode _descriptionFocusNode
+  -TextEditingController _imageUrlController
+  -FocusNode _imageUrlFocusNode
+  -GlobalKey<FormState> _form
+  -Product _editedProduct
+  -Map<String, String> _initValues
+  -bool _isInit
+  -bool _isLoading
+  +void initState()
+  +void didChangeDependencies()
+  -void _updateImageUrl()
+  -Future _saveForm()
+  +void dispose()
+  +Widget build()
+}
+
+"shop_app::screens::edit_product_screen.dart::_EditProductScreenState" o-- "flutter::src::widgets::focus_manager.dart::FocusNode"
+"shop_app::screens::edit_product_screen.dart::_EditProductScreenState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"shop_app::screens::edit_product_screen.dart::_EditProductScreenState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"shop_app::screens::edit_product_screen.dart::_EditProductScreenState" o-- "shop_app::providers::product.dart::Product"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "shop_app::screens::edit_product_screen.dart::_EditProductScreenState"
+
+class "shop_app::screens::orders_screen.dart::OrdersScreen" {
+  {static} +String routeName
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::orders_screen.dart::OrdersScreen"
+
+class "shop_app::screens::products_overview_screen.dart::FilterOptions" {
+  +int index
+  {static} +List<FilterOptions> values
+  {static} +FilterOptions Favorites
+  {static} +FilterOptions All
+}
+
+"shop_app::screens::products_overview_screen.dart::FilterOptions" o-- "shop_app::screens::products_overview_screen.dart::FilterOptions"
+
+class "shop_app::screens::products_overview_screen.dart::ProductOverviewScreen" {
+  +_ProductOverviewScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "shop_app::screens::products_overview_screen.dart::ProductOverviewScreen"
+
+class "shop_app::screens::products_overview_screen.dart::_ProductOverviewScreenState" {
+  -bool _showOnlyFavorites
+  -bool _isInit
+  -bool _isLoading
+  +void initState()
+  +void didChangeDependencies()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "shop_app::screens::products_overview_screen.dart::_ProductOverviewScreenState"
+
+class "shop_app::screens::product_detail_screen.dart::ProductDetailScreen" {
+  {static} +String routeName
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::product_detail_screen.dart::ProductDetailScreen"
+
+class "shop_app::screens::splash_screen.dart::SplashScreen" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::splash_screen.dart::SplashScreen"
+
+class "shop_app::screens::user_products.dart::UserProductsScreen" {
+  {static} +String routeName
+  -Future _refreshProducts()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::screens::user_products.dart::UserProductsScreen"
+
+class "shop_app::widgets::app_drawer.dart::AppDrawer" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::app_drawer.dart::AppDrawer"
+
+class "shop_app::widgets::badge.dart::Badge" {
+  +Widget child
+  +dynamic value
+  +Color color
+  +Widget build()
+}
+
+"shop_app::widgets::badge.dart::Badge" o-- "flutter::src::widgets::framework.dart::Widget"
+"shop_app::widgets::badge.dart::Badge" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::badge.dart::Badge"
+
+class "shop_app::widgets::cart_item.dart::CartItem" {
+  +dynamic id
+  +dynamic productId
+  +double price
+  +int quantity
+  +dynamic title
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::cart_item.dart::CartItem"
+
+class "shop_app::widgets::order_item.dart::OrderItem" {
+  +OrderItem order
+  +_OrderItemState createState()
+}
+
+"shop_app::widgets::order_item.dart::OrderItem" o-- "shop_app::providers::orders.dart::OrderItem"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "shop_app::widgets::order_item.dart::OrderItem"
+
+class "shop_app::widgets::order_item.dart::_OrderItemState" {
+  -bool _expanded
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "shop_app::widgets::order_item.dart::_OrderItemState"
+
+class "shop_app::widgets::products-grid.dart::ProductsGrid" {
+  +bool showFavs
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::products-grid.dart::ProductsGrid"
+
+class "shop_app::widgets::product_item.dart::ProductItem" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::product_item.dart::ProductItem"
+
+class "shop_app::widgets::user_product_item.dart::UserProductItem" {
+  +dynamic id
+  +dynamic title
+  +dynamic imageUrl
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "shop_app::widgets::user_product_item.dart::UserProductItem"
+
+
+@enduml
